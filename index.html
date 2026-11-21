@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>мусоркаtest — Тест позиций на Мусорке</title>
+  <style>
+    :root {
+      --bg-main: #0d1117;
+      --bg-card: #161b22;
+      --bg-card-hover: #1f242c;
+      --border-color: #30363d;
+      --primary: #f0883e;
+      --primary-hover: #fa9b55;
+      --accent-blue: #58a6ff;
+      --success: #2ea043;
+      --success-glow: rgba(46, 160, 67, 0.4);
+      --danger: #f85149;
+      --danger-glow: rgba(248, 81, 73, 0.4);
+      --text: #c9d1d9;
+      --text-bright: #ffffff;
+      --text-muted: #8b949e;
+      --radius: 12px;
+      --shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      overflow-x: hidden;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 900px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 28px;
+      position: relative;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 14px;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--text-bright);
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo span {
+      color: var(--primary);
+    }
+
+    .badge {
+      background: rgba(240, 136, 62, 0.15);
+      color: var(--primary);
+      border: 1px solid rgba(240, 136, 62, 0.4);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    /* Screen: Start */
+    #start-screen {
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .title {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--text-bright);
+      margin-bottom: 12px;
+    }
+
+    .desc {
+      color: var(--text-muted);
+      font-size: 16px;
+      max-width: 550px;
+      margin: 0 auto 30px auto;
+      line-height: 1.6;
+    }
+
+    .btn {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 14px 32px;
+      font-size: 17px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn:hover {
+      background: var(--primary-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 14px rgba(240, 136, 62, 0.4);
+    }
+
+    .btn-secondary {
+      background: #21262d;
+      color: var(--text-bright);
+      border: 1px solid var(--border-color);
+    }
+
+    .btn-secondary:hover {
+      background: #30363d;
+      box-shadow: none;
+    }
+
+    /* Top stats bar */
+    .quiz-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .progress-wrap {
+      flex: 1;
+      margin-right: 20px;
+    }
+
+    .progress-bar-bg {
+      width: 100%;
+      height: 8px;
+      background: #21262d;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 6px;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--primary);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .score-badge {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-bright);
+      background: #21262d;
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1px solid var(--border-color);
+    }
+
+    /* Question Screen */
+    .image-container {
+      position: relative;
+      width: 100%;
+      height: 420px;
+      background: #000;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--border-color);
+      cursor: zoom-in;
+    }
+
+    .image-container img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      transition: transform 0.3s ease;
+    }
+
+    .zoom-hint {
+      position: absolute;
+      bottom: 12px;
+      right: 12px;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(4px);
+      color: #fff;
+      font-size: 12px;
+      padding: 5px 10px;
+      border-radius: 6px;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .question-prompt {
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--text-bright);
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 600px) {
+      .options-grid {
+        grid-template-columns: 1fr;
+      }
+      .image-container {
+        height: 260px;
+      }
+    }
+
+    .option-btn {
+      background: #21262d;
+      border: 1px solid var(--border-color);
+      color: var(--text-bright);
+      padding: 16px 20px;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 12px;
+      text-align: left;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      background: #30363d;
+      border-color: #58a6ff;
+      transform: translateY(-2px);
+    }
+
+    .option-key {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      background: #161b22;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      font-size: 13px;
+      color: var(--text-muted);
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .option-btn.correct {
+      background: rgba(46, 160, 67, 0.25) !important;
+      border-color: var(--success) !important;
+      color: #ffffff !important;
+      box-shadow: 0 0 12px var(--success-glow);
+    }
+
+    .option-btn.correct .option-key {
+      background: var(--success);
+      color: #fff;
+      border-color: var(--success);
+    }
+
+    .option-btn.incorrect {
+      background: rgba(248, 81, 73, 0.25) !important;
+      border-color: var(--danger) !important;
+      color: #ffffff !important;
+      box-shadow: 0 0 12px var(--danger-glow);
+    }
+
+    .option-btn.incorrect .option-key {
+      background: var(--danger);
+      color: #fff;
+      border-color: var(--danger);
+    }
+
+    .footer-actions {
+      display: flex;
+      justify-content: flex-end;
+      min-height: 48px;
+    }
+
+    /* Modal Image Zoom */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.88);
+      backdrop-filter: blur(8px);
+      align-items: center;
+      justify-content: center;
+      cursor: zoom-out;
+      padding: 20px;
+    }
+
+    .modal img {
+      max-width: 95vw;
+      max-height: 95vh;
+      border-radius: 8px;
+      box-shadow: 0 0 30px rgba(0,0,0,0.8);
+      object-fit: contain;
+    }
+
+    /* Result Screen */
+    #result-screen {
+      text-align: center;
+      padding: 20px 0;
+    }
+
+    .result-score-circle {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      border: 4px solid var(--primary);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px auto;
+      background: rgba(240, 136, 62, 0.1);
+    }
+
+    .score-number {
+      font-size: 38px;
+      font-weight: 800;
+      color: var(--text-bright);
+    }
+
+    .score-total {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .result-rank {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--text-bright);
+      margin-bottom: 8px;
+    }
+
+    .result-msg {
+      color: var(--text-muted);
+      margin-bottom: 28px;
+    }
+
+    .review-section {
+      text-align: left;
+      margin-top: 30px;
+      border-top: 1px solid var(--border-color);
+      padding-top: 24px;
+    }
+
+    .review-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-bright);
+      margin-bottom: 16px;
+    }
+
+    .review-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 14px;
+      max-height: 480px;
+      overflow-y: auto;
+      padding-right: 6px;
+    }
+
+    .review-card {
+      background: #21262d;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .review-card.correct-card {
+      border-left: 4px solid var(--success);
+    }
+
+    .review-card.wrong-card {
+      border-left: 4px solid var(--danger);
+    }
+
+    .review-thumb {
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
+      background: #000;
+      cursor: pointer;
+    }
+
+    .review-info {
+      padding: 12px;
+      font-size: 14px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .review-name {
+      font-weight: 700;
+      color: var(--text-bright);
+    }
+
+    .review-detail {
+      font-size: 13px;
+    }
+
+    .review-detail span {
+      font-weight: 600;
+    }
+
+    .tag-correct {
+      color: #3fb950;
+    }
+
+    .tag-wrong {
+      color: #f85149;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #161b22;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #30363d;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #484f58;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <div class="logo">мусорка<span>test</span></div>
+      <div class="badge">Мусорка • 18 позиций</div>
+    </header>
+
+    <!-- Start Screen -->
+    <div id="start-screen">
+      <h1 class="title">Проверка знания позиций</h1>
+      <p class="desc">
+        Готов проверить, насколько хорошо ты ориентируешься на карте «Мусорка»?
+        В тесте 18 скриншотов позиций в случайном порядке. На каждый вопрос 4 варианта ответа и только 1 правильный.
+      </p>
+      <button class="btn" id="start-btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <polygon points="5 3 19 12 5 21 5 3"></polygon>
+        </svg>
+        Начать тест
+      </button>
+    </div>
+
+    <!-- Quiz Screen -->
+    <div id="quiz-screen" style="display: none;">
+      <div class="quiz-header">
+        <div class="progress-wrap">
+          <div style="display: flex; justify-content: space-between; font-size: 14px; font-weight: 600;">
+            <span id="question-counter">Вопрос 1 из 18</span>
+            <span id="accuracy-counter" style="color: var(--text-muted);">0%</span>
+          </div>
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="progress-fill"></div>
+          </div>
+        </div>
+        <div class="score-badge">
+          Счёт: <span id="current-score" style="color: var(--primary); font-weight: 800;">0</span>
+        </div>
+      </div>
+
+      <div class="image-container" id="image-wrap" title="Нажмите, чтобы увеличить">
+        <img id="quiz-image" src="" alt="Позиция">
+        <div class="zoom-hint">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            <line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line>
+          </svg>
+          Кликни для зума
+        </div>
+      </div>
+
+      <div class="question-prompt">Как называется эта позиция?</div>
+
+      <div class="options-grid" id="options-container">
+        <!-- 4 buttons populated via JS -->
+      </div>
+
+      <div class="footer-actions">
+        <button class="btn" id="next-btn" style="display: none;">
+          Следующий вопрос →
+        </button>
+      </div>
+    </div>
+
+    <!-- Result Screen -->
+    <div id="result-screen" style="display: none;">
+      <div class="result-score-circle">
+        <div class="score-number" id="final-score">0</div>
+        <div class="score-total" id="final-total">из 18</div>
+      </div>
+      <div class="result-rank" id="final-rank">Легенда мусорки</div>
+      <div class="result-msg" id="final-percent">Точность: 100%</div>
+
+      <div style="display: flex; justify-content: center; gap: 14px; margin-bottom: 24px;">
+        <button class="btn" id="restart-btn">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M23 4v6h-6"></path><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+          </svg>
+          Пройти ещё раз
+        </button>
+      </div>
+
+      <div class="review-section">
+        <div class="review-title">Разбор ответов:</div>
+        <div class="review-grid" id="review-container">
+          <!-- Review cards populated here -->
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Modal Zoom -->
+  <div class="modal" id="zoom-modal">
+    <img id="modal-img" src="" alt="Zoomed position">
+  </div>
+
+  <script>
+    // Audio synthesizer for feedback sounds (Web Audio API)
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function playSound(type) {
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      if (type === 'correct') {
+        osc.frequency.setValueAtTime(520, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(780, audioCtx.currentTime + 0.15);
+        gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.25);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.25);
+      } else if (type === 'wrong') {
+        osc.frequency.setValueAtTime(260, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(140, audioCtx.currentTime + 0.2);
+        gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.3);
+      }
+    }
+
+    // Positions dataset (18 positions)
+    const rawQuestions = [
+      {
+        id: 1,
+        image: "images/pos_1.jpg",
+        correct: "Ближние холодосы",
+        options: ["Ближние холодосы", "Дальние холодосы", "Средние холодосы", "Верхние холодосы"]
+      },
+      {
+        id: 2,
+        image: "images/pos_2.jpg",
+        correct: "Дальние холодосы",
+        options: ["Дальние холодосы", "Ближние холодосы", "Крыша холодосов", "Задние холодосы"]
+      },
+      {
+        id: 3,
+        image: "images/pos_3.jpg",
+        correct: "Треугольники",
+        options: ["Треугольники", "Зубцы", "Пирамиды", "Трёхскатка"]
+      },
+      {
+        id: 4,
+        image: "images/pos_4.jpg",
+        correct: "Ржавый под ангаром",
+        options: ["Ржавый под ангаром", "Контейнер под ангаром", "Ржавый за мейном", "Тёмный под ангаром"]
+      },
+      {
+        id: 5,
+        image: "images/pos_5.jpg",
+        correct: "Под малым ангаром",
+        options: ["Под малым ангаром", "Под большим ангаром", "Малый ангар", "Склад под ангаром"]
+      },
+      {
+        id: 6,
+        image: "images/pos_6.jpg",
+        correct: "Под большим ангаром",
+        options: ["Под большим ангаром", "Под малым ангаром", "Большой ангар", "Вагон под ангаром"]
+      },
+      {
+        id: 7,
+        image: "images/pos_7.jpg",
+        correct: "Навес",
+        options: ["Навес", "Козырёк", "Дробилка", "Лента под навесом"]
+      },
+      {
+        id: 8,
+        image: "images/pos_8.jpg",
+        correct: "Украина",
+        options: ["Украина", "Бочки", "Цистерны", "Цветные контейнеры"]
+      },
+      {
+        id: 9,
+        image: "images/pos_9.jpg",
+        correct: "Мейн крыша",
+        options: ["Мейн крыша", "Крыша дефф", "Крыша гаража", "Малая крыша"]
+      },
+      {
+        id: 10,
+        image: "images/pos_10.jpg",
+        correct: "Крыша дефф",
+        options: ["Крыша дефф", "Мейн крыша", "Крыша цеха", "Дефф позиция"]
+      },
+      {
+        id: 11,
+        image: "images/pos_11.jpg",
+        correct: "Люлька",
+        options: ["Люлька", "Корыто", "Платформа", "Подвес"]
+      },
+      {
+        id: 12,
+        image: "images/pos_12.jpg",
+        correct: "Конектор",
+        options: ["Конектор", "Переход", "Туннель", "Кишка"]
+      },
+      {
+        id: 13,
+        image: "images/pos_13.jpg",
+        correct: "Дефф респа",
+        options: ["Дефф респа", "Атака респа", "Дефф ангар", "Задний дефф"]
+      },
+      {
+        id: 14,
+        image: "images/pos_14.jpg",
+        correct: "Канава",
+        options: ["Канава", "Спуск", "Подпорка", "Парапет"]
+      },
+      {
+        id: 15,
+        image: "images/pos_15.jpg",
+        correct: "ЛГ",
+        options: ["ЛГ", "КГ", "Пандус", "Спуск в гараж"]
+      },
+      {
+        id: 16,
+        image: "images/pos_16.jpg",
+        correct: "Под холодосами",
+        options: ["Под холодосами", "Низ холодосов", "Бочки под холодосами", "Яма холодосов"]
+      },
+      {
+        id: 17,
+        image: "images/pos_17.jpg",
+        correct: "Малый ангар",
+        options: ["Малый ангар", "Большой ангар", "Под малым ангаром", "Крыша малого ангара"]
+      },
+      {
+        id: 18,
+        image: "images/pos_18.jpg",
+        correct: "Большой ангар",
+        options: ["Большой ангар", "Малый ангар", "Под большим ангаром", "Крыша большого ангара"]
+      }
+    ];
+
+    // Helper: Fisher-Yates shuffle
+    function shuffle(arr) {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    // State
+    let quizList = [];
+    let currentIndex = 0;
+    let score = 0;
+    let userAnswers = [];
+    let hasAnswered = false;
+
+    // DOM Elements
+    const startScreen = document.getElementById('start-screen');
+    const quizScreen = document.getElementById('quiz-screen');
+    const resultScreen = document.getElementById('result-screen');
+
+    const startBtn = document.getElementById('start-btn');
+    const restartBtn = document.getElementById('restart-btn');
+    const nextBtn = document.getElementById('next-btn');
+
+    const questionCounter = document.getElementById('question-counter');
+    const accuracyCounter = document.getElementById('accuracy-counter');
+    const progressFill = document.getElementById('progress-fill');
+    const currentScoreEl = document.getElementById('current-score');
+    const quizImage = document.getElementById('quiz-image');
+    const optionsContainer = document.getElementById('options-container');
+
+    const imageWrap = document.getElementById('image-wrap');
+    const zoomModal = document.getElementById('zoom-modal');
+    const modalImg = document.getElementById('modal-img');
+
+    // Zoom modal events
+    imageWrap.addEventListener('click', () => {
+      modalImg.src = quizImage.src;
+      zoomModal.style.display = 'flex';
+    });
+    zoomModal.addEventListener('click', () => {
+      zoomModal.style.display = 'none';
+    });
+
+    // Start Quiz
+    function startQuiz() {
+      quizList = shuffle(rawQuestions).map(q => {
+        return {
+          ...q,
+          shuffledOptions: shuffle(q.options)
+        };
+      });
+
+      currentIndex = 0;
+      score = 0;
+      userAnswers = [];
+      hasAnswered = false;
+
+      startScreen.style.display = 'none';
+      resultScreen.style.display = 'none';
+      quizScreen.style.display = 'block';
+
+      loadQuestion();
+    }
+
+    // Load Current Question
+    function loadQuestion() {
+      hasAnswered = false;
+      nextBtn.style.display = 'none';
+
+      const q = quizList[currentIndex];
+      questionCounter.textContent = `Вопрос ${currentIndex + 1} из ${quizList.length}`;
+      const percentDone = (currentIndex / quizList.length) * 100;
+      progressFill.style.width = `${percentDone}%`;
+      
+      const acc = currentIndex === 0 ? 0 : Math.round((score / currentIndex) * 100);
+      accuracyCounter.textContent = `${acc}% верно`;
+      currentScoreEl.textContent = score;
+
+      quizImage.src = q.image;
+
+      optionsContainer.innerHTML = '';
+      const keyLabels = ['1', '2', '3', '4'];
+
+      q.shuffledOptions.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.dataset.answer = opt;
+        btn.innerHTML = `<span class="option-key">${keyLabels[idx]}</span> <span>${opt}</span>`;
+        btn.addEventListener('click', () => handleAnswer(opt, btn));
+        optionsContainer.appendChild(btn);
+      });
+    }
+
+    // Handle Selection
+    function handleAnswer(selectedOpt, clickedBtn) {
+      if (hasAnswered) return;
+      hasAnswered = true;
+
+      const q = quizList[currentIndex];
+      const isCorrect = (selectedOpt === q.correct);
+
+      if (isCorrect) {
+        score++;
+        currentScoreEl.textContent = score;
+        clickedBtn.classList.add('correct');
+        playSound('correct');
+      } else {
+        clickedBtn.classList.add('incorrect');
+        playSound('wrong');
+        const allButtons = optionsContainer.querySelectorAll('.option-btn');
+        allButtons.forEach(btn => {
+          if (btn.dataset.answer === q.correct) {
+            btn.classList.add('correct');
+          }
+        });
+      }
+
+      optionsContainer.querySelectorAll('.option-btn').forEach(btn => {
+        btn.disabled = true;
+      });
+
+      userAnswers.push({
+        question: q,
+        selected: selectedOpt,
+        isCorrect: isCorrect
+      });
+
+      nextBtn.style.display = 'inline-flex';
+      nextBtn.focus();
+
+      window.autoNextTimeout = setTimeout(() => {
+        if (hasAnswered) {
+          goNext();
+        }
+      }, 1600);
+    }
+
+    function goNext() {
+      clearTimeout(window.autoNextTimeout);
+      currentIndex++;
+      if (currentIndex < quizList.length) {
+        loadQuestion();
+      } else {
+        showResults();
+      }
+    }
+
+    nextBtn.addEventListener('click', goNext);
+
+    // Show Results
+    function showResults() {
+      quizScreen.style.display = 'none';
+      resultScreen.style.display = 'block';
+
+      const finalScoreEl = document.getElementById('final-score');
+      const finalTotalEl = document.getElementById('final-total');
+      const finalRankEl = document.getElementById('final-rank');
+      const finalPercentEl = document.getElementById('final-percent');
+      const reviewContainer = document.getElementById('review-container');
+
+      finalScoreEl.textContent = score;
+      finalTotalEl.textContent = `из ${quizList.length}`;
+
+      const pct = Math.round((score / quizList.length) * 100);
+      finalPercentEl.textContent = `Точность: ${pct}% (${score} из ${quizList.length} верных ответов)`;
+
+      if (pct === 100) {
+        finalRankEl.textContent = "🏆 Легенда мусорки (Идеально!)";
+        finalRankEl.style.color = "#3fb950";
+      } else if (pct >= 80) {
+        finalRankEl.textContent = "🔥 Опытный стрелок (Отлично)";
+        finalRankEl.style.color = "#58a6ff";
+      } else if (pct >= 50) {
+        finalRankEl.textContent = "🎯 Знаток мусорки (Неплохо, но есть ошибки)";
+        finalRankEl.style.color = "#f0883e";
+      } else {
+        finalRankEl.textContent = "⚠️ Новичок (Нужно подучить позиции)";
+        finalRankEl.style.color = "#f85149";
+      }
+
+      // Review cards
+      reviewContainer.innerHTML = '';
+      userAnswers.forEach((item, i) => {
+        const card = document.createElement('div');
+        card.className = `review-card ${item.isCorrect ? 'correct-card' : 'wrong-card'}`;
+        card.innerHTML = `
+          <img class="review-thumb" src="${item.question.image}" alt="Скриншот #${i+1}" onclick="openModal('${item.question.image}')">
+          <div class="review-info">
+            <div class="review-name">#${i + 1}. Позиция: ${item.question.correct}</div>
+            <div class="review-detail">
+              Твой ответ: <span class="${item.isCorrect ? 'tag-correct' : 'tag-wrong'}">${item.selected}</span>
+              ${item.isCorrect ? ' ✓' : ' ✗'}
+            </div>
+            ${!item.isCorrect ? `<div class="review-detail" style="color: #3fb950;">Правильно: <b>${item.question.correct}</b></div>` : ''}
+          </div>
+        `;
+        reviewContainer.appendChild(card);
+      });
+    }
+
+    window.openModal = function(src) {
+      modalImg.src = src;
+      zoomModal.style.display = 'flex';
+    };
+
+    // Keyboard support: 1, 2, 3, 4 and Space/Enter
+    document.addEventListener('keydown', (e) => {
+      if (quizScreen.style.display === 'block') {
+        if (!hasAnswered) {
+          const keys = ['1', '2', '3', '4'];
+          const idx = keys.indexOf(e.key);
+          if (idx !== -1) {
+            const buttons = optionsContainer.querySelectorAll('.option-btn');
+            if (buttons[idx]) {
+              buttons[idx].click();
+            }
+          }
+        } else {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            goNext();
+          }
+        }
+      } else if (startScreen.style.display !== 'none') {
+        if (e.key === 'Enter') startQuiz();
+      }
+    });
+
+    startBtn.addEventListener('click', startQuiz);
+    restartBtn.addEventListener('click', startQuiz);
+  </script>
+</body>
+</html>
